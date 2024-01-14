@@ -4,4 +4,3 @@
 Drivers/
 STM32F401RETX_FLASH.ld
 STM32F401RETX_RAM.ld        
-UART_IF.ioc

@@ -21,7 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <string.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -89,7 +89,8 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-
+  const unsigned char* uart_tx_buffer = "Hello!\0\n";
+  volatile HAL_StatusTypeDef uart_tx_status = HAL_ERROR;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -97,8 +98,18 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-	HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
-	HAL_Delay(1500);
+	  HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
+	  // Time needed to make observations.
+	  HAL_Delay(1000);
+
+	  HAL_StatusTypeDef uart_tx_status = HAL_UART_Transmit(&huart2, uart_tx_buffer, strlen(uart_tx_buffer) , 500);
+
+	  if (uart_tx_status == HAL_OK){
+	  		  HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+	  		  HAL_Delay(500);
+	  	  }
+	 else
+	  	 HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */

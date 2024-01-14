@@ -89,7 +89,7 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-  const unsigned char* uart_tx_buffer = "Hello!\0\n";
+  const unsigned char* uart_tx_buffer = "Hello!\n\r\0";
   volatile HAL_StatusTypeDef uart_tx_status = HAL_ERROR;
   /* USER CODE END 2 */
 

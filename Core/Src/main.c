@@ -99,12 +99,12 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	 uart_tx_status = HAL_UART_Transmit(&huart2, uart_tx_buffer, strlen(uart_tx_buffer) , 50);
+	 uart_tx_status = HAL_UART_Transmit_IT(&huart2, uart_tx_buffer, strlen(uart_tx_buffer));
 
 	 if(HAL_OK == uart_tx_status)
 	 {
 		 // Successful transmit
-		 HAL_Delay(200);
+		 HAL_Delay(500);
 	 }
 	 else
 	 {
@@ -164,7 +164,10 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+{
+    HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5); // Toggle LED2 on TX complete
+}
 /* USER CODE END 4 */
 
 /**
@@ -181,6 +184,7 @@ void Error_Handler(void)
   }
   /* USER CODE END Error_Handler_Debug */
 }
+
 
 #ifdef  USE_FULL_ASSERT
 /**

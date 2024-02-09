@@ -1,0 +1,7 @@
+Data Serilization
+Structure Infrastructure for serilized data
+Protocol implementation
+Software Design
+memory layouts
+CRC implementation
+Seed-key interraction for security access

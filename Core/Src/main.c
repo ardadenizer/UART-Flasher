@@ -89,14 +89,16 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
   const unsigned char* uart_tx_buffer = "Transmit Successful!\n\r\0";
+  const unsigned char* start_indication = "Program Start...\n\r\0";
   volatile HAL_StatusTypeDef uart_tx_status = HAL_ERROR;
+
+  HAL_UART_Transmit(&huart2, start_indication, strlen(start_indication) , 50);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    /* USER CODE END WHILE */
 	 uart_tx_status = HAL_UART_Transmit(&huart2, uart_tx_buffer, strlen(uart_tx_buffer) , 50);
 
 	 if(HAL_OK == uart_tx_status)
@@ -108,6 +110,8 @@ int main(void)
 	 {
 		 // Error Handler
 	 }
+    /* USER CODE END WHILE */
+
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */

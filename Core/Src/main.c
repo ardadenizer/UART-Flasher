@@ -18,12 +18,14 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "crc.h"
 #include "usart.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <string.h>
+#include <stdint.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -87,9 +89,10 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART2_UART_Init();
+  MX_CRC_Init();
   /* USER CODE BEGIN 2 */
-  const unsigned char* uart_tx_buffer = "Transmit Successful!\n\r\0";
-  const unsigned char* start_indication = "Program Start...\n\r\0";
+  const  uint8_t* uart_tx_buffer = "Transmit Successful!\n\r\0";
+  const  uint8_t* start_indication = "Program Start...\n\r\0";
   volatile HAL_StatusTypeDef uart_tx_status = HAL_ERROR;
 
   HAL_UART_Transmit(&huart2, start_indication, strlen(start_indication) , 50);
@@ -168,6 +171,10 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 {
     HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5); // Toggle LED2 on TX complete
 }
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+    HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5); // Toggle LED2 on TX complete
+}
 /* USER CODE END 4 */
 
 /**
@@ -184,7 +191,6 @@ void Error_Handler(void)
   }
   /* USER CODE END Error_Handler_Debug */
 }
-
 
 #ifdef  USE_FULL_ASSERT
 /**

@@ -18,7 +18,7 @@
 #include "flash.h"
 
 
-uint32_t Flash_Write_Data (uint32_t StartSectorAddress, uint32_t *Data, uint16_t numberofwords)
+uint32_t Flash_Write_Syc (uint32_t StartSectorAddress, uint32_t *Data, uint16_t numberofwords)
 {
 
 	static FLASH_EraseInitTypeDef EraseInitStruct;
@@ -74,4 +74,24 @@ uint32_t Flash_Write_Data (uint32_t StartSectorAddress, uint32_t *Data, uint16_t
 	  HAL_FLASH_Lock();
 
 	   return 0;
+}
+
+e_FlashReturnStatus Flash_Read(FlashAddressType Address, void* Data, uint32_t Size )
+{
+	FlashAddressType * p_Address = (FlashAddressType*)Address;
+	e_FlashJobStatus JobStatus   =  JOB_STATUS_IN_PROGRESS;
+
+	if ((NULL != p_Address) && ( Size > 0))
+	{
+		size_t numBytesToCopy = Size * sizeof(*Data);
+
+		(void*)memcpy(Data,(void*)Address, numBytesToCopy);
+		JobStatus   =  JOB_STATUS_COMPLETED;
+	}
+	else
+	{
+		return FLS_ERROR;
+	}
+
+	return FLS_OK;
 }

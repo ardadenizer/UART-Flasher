@@ -9,6 +9,7 @@
 #define INC_FLASH_H_
 
 #include <stdint.h>
+#include <string.h>
 #include "stm32f4xx_hal.h"
 
 typedef uint32_t FlashAddressType;
@@ -21,17 +22,24 @@ typedef enum
 	JOB_STATUS_ERROR
 }e_FlashJobStatus;
 
+
+//TODO: Conditions not correct, read/write error...
 typedef enum
 {
-  FLS_OK       = 0x00U,
-  FLS_ERROR    = 0x01U,
-  FLS_BUSY     = 0x02U,
-  FLS_TIMEOUT  = 0x03U
+  FLS_OK       		= 0x00U,
+  FLS_READ_ERROR    = 0x01U,
+  FLS_WRITE_ERROR   = 0x02U,
+  FLS_ERASE_ERROR   = 0x03U,
+  FLS_COND_ERROR    = 0x04U,
+  FLS_BUSY     		= 0x05U,
+  FLS_TIMEOUT  		= 0x06U
 } e_FlashReturnStatus;
 
-uint32_t Flash_Write_Syc (uint32_t StartSectorAddress, uint32_t *Data, uint16_t numberofwords);
+e_FlashReturnStatus Flash_Write_Syc (FlashAddressType StartAddress, uint8_t *Data, size_t DataLength);
 
 e_FlashReturnStatus Flash_Read(FlashAddressType Address, void* Data, uint32_t Size );
+
+e_FlashReturnStatus Flash_Erase_Sectors(uint8_t SectorCount);
 
 //SectorType Get_Sector(FlashAddressType StartSectorAddress )
 

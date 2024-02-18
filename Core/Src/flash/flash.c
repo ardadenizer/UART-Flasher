@@ -24,6 +24,13 @@ e_FlashReturnStatus Flash_Erase_Sectors(uint8_t SectorCount)
     e_FlashJobStatus JobStatus     	= JOB_STATUS_IN_PROGRESS;
     uint32_t *SectorError 			= NULL;
     uint32_t TotalSectors 			= FLASH_SECTOR_TOTAL; // Total number of sectors in Flash memory
+    uint8_t StartSector 			= FLASH_SECTOR_6;
+
+    if (SectorCount > 2)
+    {
+    	RetStatus = FLS_COND_ERROR;
+    	return RetStatus;
+    }
 
     /* Unlock the Flash to enable the flash control register access */
     HAL_FLASH_Unlock();
@@ -31,7 +38,7 @@ e_FlashReturnStatus Flash_Erase_Sectors(uint8_t SectorCount)
     /* Fill EraseInit structure */
     EraseInitStruct.TypeErase = FLASH_TYPEERASE_SECTORS;
     EraseInitStruct.VoltageRange = FLASH_VOLTAGE_RANGE_3;
-    EraseInitStruct.Sector = FLASH_SECTOR_6;
+    EraseInitStruct.Sector = StartSector;
     EraseInitStruct.NbSectors = SectorCount;
 
     // Erase Sectors, Blocking function

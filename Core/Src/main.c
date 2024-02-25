@@ -21,6 +21,7 @@
 #include "crc.h"
 #include "usart.h"
 #include "gpio.h"
+#include "flash.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -91,18 +92,41 @@ int main(void)
   MX_USART2_UART_Init();
   MX_CRC_Init();
   /* USER CODE BEGIN 2 */
-  const  uint8_t* uart_tx_buffer = "Transmit Successful!\n\r\0";
-  const  uint8_t* start_indication = "Program Start...\n\r\0";
+  /*----------------------------------- GLOBALS(main) ----------------------------------*/
+  const  uint8_t* start_indication 			= "Program Start...\n\r\0";
+  const  uint8_t* operation_failed 			= "Operation failed...\n\r\0";
+  const  uint8_t* uart_tx_indication 		= "Transmit Successful!\n\r\0";
+  const  uint8_t* flash_erase_indication	= "Sectors are erased...\n\r\0";
+  const  uint8_t* flash_write_indication	= "Sectors are flashed...\n\r\0";
+  const  uint8_t* flash_write_string 		= "GRMSTRM_ARDA\n\r\0";
+  uint8_t flash_read_buffer[100];
   volatile HAL_StatusTypeDef uart_tx_status = HAL_ERROR;
 
+  /*----------------------------------- TESTS ----------------------------------*/
+
   HAL_UART_Transmit(&huart2, start_indication, strlen(start_indication) , 50);
+
+  // Erasing sectors 5-6-7
+  e_FlashReturnStatus fls_erase_status = Flash_Erase_Sectors(5,3);
+
+  if (FLS_OK == fls_erase_status)
+  {
+	  HAL_UART_Transmit(&huart2, flash_erase_indication, strlen(flash_erase_indication) , 50);
+  }
+  else
+  {
+	  HAL_UART_Transmit(&huart2, operation_failed, strlen(operation_failed) , 50);
+	  HAL_Delay(2000);
+  }
+
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	 uart_tx_status = HAL_UART_Transmit_IT(&huart2, uart_tx_buffer, strlen(uart_tx_buffer));
+	 uart_tx_status = HAL_UART_Transmit_IT(&huart2, uart_tx_indication, strlen(uart_tx_indication));
 
 	 if(HAL_OK == uart_tx_status)
 	 {

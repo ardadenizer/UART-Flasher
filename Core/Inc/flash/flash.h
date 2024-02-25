@@ -12,6 +12,8 @@
 #include <string.h>
 #include "stm32f4xx_hal.h"
 
+#define START_SECTOR_LIMIT (4u)
+
 typedef uint32_t FlashAddressType;
 
 typedef enum
@@ -39,7 +41,11 @@ e_FlashReturnStatus Flash_Write_Syc (FlashAddressType StartAddress, uint8_t *Dat
 
 e_FlashReturnStatus Flash_Read(FlashAddressType Address, void* Data, uint32_t Size );
 
-e_FlashReturnStatus Flash_Erase_Sectors(uint8_t SectorCount);
+e_FlashReturnStatus Flash_Erase_Sectors(uint8_t StartSector,uint8_t SectorCount);
+
+e_FlashReturnStatus Flash_Mass_Erase(void);
+
+e_FlashReturnStatus Flash_Get_Voltage_Range(void);
 
 //SectorType Get_Sector(FlashAddressType StartSectorAddress )
 
